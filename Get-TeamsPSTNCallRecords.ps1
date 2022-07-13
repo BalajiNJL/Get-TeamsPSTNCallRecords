@@ -67,7 +67,7 @@ function Get-Calls {
         $toDateTimeString = $toDateTime | Get-Date -Format "yyyy-MM-dd"
         $fromDateTimeString = $fromDateTime | Get-Date -Format "yyyy-MM-dd"
 
-        $currentUri = "https://graph.microsoft.com/beta/communications/callRecords/$type(fromDateTime=$fromDateTimeString,toDateTime=$toDateTimeString)"
+        $currentUri = "https://graph.microsoft.com/v1.0/communications/callRecords/$type(fromDateTime=$fromDateTimeString,toDateTime=$toDateTimeString)"
 
         Write-Host "        - Checking for call records between $fromDateTimeString and $toDateTimeString..." -NoNewline
 
@@ -165,12 +165,16 @@ $callingPlanCalls = Get-Calls -type "getPstnCalls"
 # Save to file
 Write-Host "`r`n- Saving PSTN call records to $SaveFormat files"
 
+    # Set initial to date of date range to end of today/start of tomorrow
+    $toDateTime = (Get-Date).AddDays(+1)
+    $toDateTimeString = $toDateTime | Get-Date -Format "yyyy-MM-dd"
+
 if ($SaveFormat -eq "JSON") {
 
     if ($directRoutingCalls) {
         try {
-            Write-Host "    - Saving Direct Routing call records in JSON format to $SavePath\DirectRoutingCalls.json..." -NoNewline
-            $directRoutingCalls | ConvertTo-Json | Out-File -FilePath "$SavePath\DirectRoutingCalls.json"
+            Write-Host "    - Saving Direct Routing call records in JSON format to $SavePath\DirectRoutingCalls_$toDateTimeString.json..." -NoNewline
+            $directRoutingCalls | ConvertTo-Json | Out-File -FilePath "$SavePath\DirectRoutingCalls_$toDateTimeString.json"
             Write-Host " SUCCESS" -ForegroundColor Green
         }
         catch {
@@ -180,8 +184,8 @@ if ($SaveFormat -eq "JSON") {
 
     if ($callingPlanCalls) {
         try {
-            Write-Host "    - Saving Calling Plan call records in JSON format to $SavePath\CallingPlanCalls.json..." -NoNewline
-            $callingPlanCalls | ConvertTo-Json | Out-File -FilePath "$SavePath\CallingPlanCalls.json"
+            Write-Host "    - Saving Calling Plan call records in JSON format to $SavePath\CallingPlanCalls_$toDateTimeString.json..." -NoNewline
+            $callingPlanCalls | ConvertTo-Json | Out-File -FilePath "$SavePath\CallingPlanCalls_$toDateTimeString.json"
             Write-Host " SUCCESS" -ForegroundColor Green
         }
         catch {
@@ -194,8 +198,8 @@ elseif ($SaveFormat -eq "CSV") {
 
     if ($directRoutingCalls) {
         try {
-            Write-Host "    - Saving Direct Routing call records in CSV format to $SavePath\DirectRoutingCalls.csv..." -NoNewline
-            $directRoutingCalls | Export-Csv -Path "$SavePath\DirectRoutingCalls.csv"
+            Write-Host "    - Saving Direct Routing call records in CSV format to $SavePath\DirectRoutingCalls_$toDateTimeString.csv..." -NoNewline
+            $directRoutingCalls | Export-Csv -Path "$SavePath\DirectRoutingCalls_$toDateTimeString.csv"
             Write-Host " SUCCESS" -ForegroundColor Green
         }
         catch {
@@ -206,8 +210,8 @@ elseif ($SaveFormat -eq "CSV") {
  
     if ($callingPlanCalls) {
         try {
-            Write-Host "    - Saving Calling Plan call records in CSV format to $SavePath\CallingPlanCalls.csv..." -NoNewline
-            $callingPlanCalls | Export-Csv -Path "$SavePath\CallingPlanCalls.csv"
+            Write-Host "    - Saving Calling Plan call records in CSV format to $SavePath\CallingPlanCalls_$toDateTimeString.csv..." -NoNewline
+            $callingPlanCalls | Export-Csv -Path "$SavePath\CallingPlanCalls_$toDateTimeString.csv"
             Write-Host " SUCCESS" -ForegroundColor Green
         }
         catch {
