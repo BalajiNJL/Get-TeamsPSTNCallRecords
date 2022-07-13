@@ -1,7 +1,8 @@
 # Get-TeamsPSTNCallRecords
+7/13/2022
 - Updated uri to v1.0 from beta
 - added datetime stamp to the filename
-
+-----------------------------------------------------------
 Retrieve Microsoft Teams PSTN call records for Calling Plan and Direct Routing users
 
 ![](https://www.lee-ford.co.uk/images/get-teamspstncallrecords/get-teamspstncallrecords.png)
